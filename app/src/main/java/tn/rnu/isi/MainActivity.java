@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         password.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // 👉 This runs when Enter/Done is pressed
+
                 String username = ((TextView)findViewById(R.id.unamef)).getText().toString();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
