@@ -9,4 +9,6 @@
     <color name="gray_light">#F5F5F5</color>
     <color name="gray_dark">#424242</color>
     <color name="accent_orange">#FFA726</color>
+    <color name="bg_blue">#2A3941</color>
+    <color name="ebony_clay">#1f2937</color>
 </resources>

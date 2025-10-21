@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent i = new Intent(this, LoadingActivity.class);
                 startActivity(i);
+                finish();
                 return true;
             }
             return false;

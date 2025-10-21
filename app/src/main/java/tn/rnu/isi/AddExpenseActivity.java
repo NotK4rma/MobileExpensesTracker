@@ -1,13 +1,18 @@
 package tn.rnu.isi;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AddExpenseActivity extends AppCompatActivity {
@@ -46,7 +51,7 @@ public class AddExpenseActivity extends AppCompatActivity {
                 String amount = expenseAmount.getText().toString().trim();
                 String category = expenseCategorySpinner.getSelectedItem().toString();
 
-                if (name.isEmpty() || amount.isEmpty()) {
+                if (name.isEmpty() || amount.isEmpty() || price.isEmpty()) {
                     Toast.makeText(AddExpenseActivity.this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -61,8 +66,33 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(AddExpenseActivity.this, ViewExpensesActivity.class);
                 intent.putExtras(bundle);
-                startActivity(intent);
+
+                if (getCallingActivity() != null) {
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                } else {
+                    startActivity(intent);
+                }
             }
         });
+
+        EditText dateInput = findViewById(R.id.dateInput);
+
+        dateInput.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog dialog = new DatePickerDialog(
+                    this,
+                    (view, y, m, d) -> dateInput.setText(d + "/" + (m + 1) + "/" + y),
+                    year, month, day
+            );
+            dialog.show();
+        });
+
+
+
     }
 }
