@@ -62,6 +62,14 @@ public class AddExpenseActivity extends AppCompatActivity {
                 bundle.putString("expensePrice", price);
                 bundle.putString("expenseAmount", amount);
                 bundle.putString("expenseCategory", category);
+                if(getIntent()!=null && getIntent().getExtras()!=null && getIntent().getExtras().containsKey("budget")){
+                    bundle.putFloat("budget",getIntent().getExtras().getFloat("budget")
+                    );
+
+                }
+
+
+
 
 
                 Intent intent = new Intent(AddExpenseActivity.this, ViewExpensesActivity.class);

@@ -44,6 +44,7 @@ public class LoadingActivity extends AppCompatActivity {
                 Toast.makeText(LoadingActivity.this, "Welcome to The Home page" , Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(LoadingActivity.this, HomeActivity.class);
                 startActivity(i);
+                finish();
             }
 
         };

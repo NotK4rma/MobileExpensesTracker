@@ -15,33 +15,21 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
-
-    private TextView signup;
+public class SignUp extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_up);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        signup = findViewById(R.id.signupText);
-
-        signup.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SignUp.class);
-            startActivity(intent);
-            finish();
-
-        });
-
-        EditText password = findViewById(R.id.pwdf);
-
-        password.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+        EditText confirm = findViewById(R.id.confirmpwd);
+        confirm.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                 String username = ((TextView)findViewById(R.id.unamef)).getText().toString();
@@ -49,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 
 
-                Toast.makeText(this, "Welcome Back, " + username, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Welcome Onboard, " + username, Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent(this, LoadingActivity.class);
                 startActivity(i);
@@ -58,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+
     }
-
-
-
-
-
-
 }
