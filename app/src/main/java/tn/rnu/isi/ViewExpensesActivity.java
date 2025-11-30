@@ -46,7 +46,7 @@ public class ViewExpensesActivity extends Activity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1,
+                R.layout.expense_list,
                 ExpenseData.getExpenses()
         );
         expenseList.setAdapter(adapter);
@@ -105,6 +105,7 @@ public class ViewExpensesActivity extends Activity {
             String price = bundle.getString("expensePrice");
             String amount = bundle.getString("expenseAmount");
             String category = bundle.getString("expenseCategory");
+
             //budgetDollar = bundle.getFloat("budget");
 
             String emoji ;
@@ -139,6 +140,11 @@ public class ViewExpensesActivity extends Activity {
                     + "Category: " + category + "\n"
                     + "Item Price: " + price + "\n"
                     + "Total: " + Cost;
+
+            if(bundle.containsKey("date")){
+                String date = bundle.getString("date");
+                expenseItem += "\n" + "Date: " + date;
+            }
 
             ExpenseData.addExpense(expenseItem,Cost);
 

@@ -14,24 +14,31 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import tn.rnu.isi.databinding.ActivityAddExpenseBinding;
 public class AddExpenseActivity extends AppCompatActivity {
 
-    private EditText expenseName, expensePrice, expenseAmount;
-    private Spinner expenseCategorySpinner;
-    private Button btnAddExpense;
+    private ActivityAddExpenseBinding binding;
+
+//    private EditText expenseName, expensePrice, expenseAmount;
+//    private Spinner expenseCategorySpinner;
+//    private Button btnAddExpense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense);
+         super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_add_expense);
+
+        binding = ActivityAddExpenseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
 
-        expenseName = findViewById(R.id.expenseName);
-        expensePrice = findViewById(R.id.expensePrice);
-        expenseAmount = findViewById(R.id.expenseAmount);
-        expenseCategorySpinner = findViewById(R.id.expenseCategorySpinner);
-        btnAddExpense = findViewById(R.id.btnAddExpense);
+//        expenseName = findViewById(R.id.expenseName);
+//        expensePrice = findViewById(R.id.expensePrice);
+//        expenseAmount = findViewById(R.id.expenseAmount);
+//        expenseCategorySpinner = findViewById(R.id.expenseCategorySpinner);
+//        btnAddExpense = findViewById(R.id.btnAddExpense);
+//        EditText dateInput = findViewById(R.id.dateInput);
+
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -40,16 +47,17 @@ public class AddExpenseActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        expenseCategorySpinner.setAdapter(adapter);
+        binding.expenseCategorySpinner.setAdapter(adapter);
 
 
-        btnAddExpense.setOnClickListener(new View.OnClickListener() {
+        binding.btnAddExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = expenseName.getText().toString().trim();
-                String price = expensePrice.getText().toString().trim();
-                String amount = expenseAmount.getText().toString().trim();
-                String category = expenseCategorySpinner.getSelectedItem().toString();
+                String name = binding.expenseName.getText().toString().trim();
+                String price = binding.expensePrice.getText().toString().trim();
+                String amount = binding.expenseAmount.getText().toString().trim();
+                String category = binding.expenseCategorySpinner.getSelectedItem().toString();
+                String date;
 
                 if (name.isEmpty() || amount.isEmpty() || price.isEmpty()) {
                     Toast.makeText(AddExpenseActivity.this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
@@ -62,11 +70,17 @@ public class AddExpenseActivity extends AppCompatActivity {
                 bundle.putString("expensePrice", price);
                 bundle.putString("expenseAmount", amount);
                 bundle.putString("expenseCategory", category);
-                if(getIntent()!=null && getIntent().getExtras()!=null && getIntent().getExtras().containsKey("budget")){
-                    bundle.putFloat("budget",getIntent().getExtras().getFloat("budget")
-                    );
+                if(!binding.dateInput.getText().toString().isEmpty()) {
+                    date = binding.dateInput.getText().toString();
+                    bundle.putString("date", date);
 
                 }
+
+                //                if(getIntent()!=null && getIntent().getExtras()!=null && getIntent().getExtras().containsKey("budget")){
+//                    bundle.putFloat("budget",getIntent().getExtras().getFloat("budget")
+//                    );
+//
+//                }
 
 
 
@@ -86,9 +100,8 @@ public class AddExpenseActivity extends AppCompatActivity {
             }
         });
 
-        EditText dateInput = findViewById(R.id.dateInput);
 
-        dateInput.setOnClickListener(v -> {
+        binding.dateInput.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
@@ -96,7 +109,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
             DatePickerDialog dialog = new DatePickerDialog(
                     this,
-                    (view, y, m, d) -> dateInput.setText(d + "/" + (m + 1) + "/" + y),
+                    (view, y, m, d) -> binding.dateInput.setText(d + "/" + (m + 1) + "/" + y),
                     year, month, day
             );
             dialog.show();
