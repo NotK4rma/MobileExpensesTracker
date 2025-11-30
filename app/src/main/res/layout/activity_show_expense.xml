@@ -34,23 +34,45 @@
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingTop="2dp">
-
-        <Button
-            android:id="@+id/addExp"
+        <RelativeLayout
+            android:id="@+id/subHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add an expense"
-            android:drawableStart="@drawable/ic_add"
-            android:drawablePadding="8dp"
-            android:drawableTint="@color/black"
-            android:backgroundTint="@color/teal_700"
-            android:layout_alignParentEnd="true"/>
+            android:layout_margin="1dp"
+            android:layout_alignParentEnd="true"
+            >
+            <Button
+                android:id="@+id/addExp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add an expense"
+                android:drawableStart="@drawable/ic_add"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/black"
+                android:backgroundTint="@color/teal_700"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                />
+
+            <ImageView
+                android:id="@+id/wipeList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/addExp"
+                android:rotation="45"
+                android:src="@drawable/ic_add"
+                android:tint="@color/red" />
+
+        </RelativeLayout>
+
 
         <ListView
             android:id="@+id/expenseList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/addExp"
+            android:layout_below="@id/subHeader"
             android:layout_marginTop="2dp"
             android:divider="@color/bg_blue"
             android:dividerHeight="0.8dp"

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +23,8 @@ public class ViewExpensesActivity extends Activity {
     private Button btnAddExpense;
     private static final int REQUEST_ADD_EXPENSE = 1;
 
+    private ImageView close ;
+
     private float expenseDollar = 0f;
 
     private float budgetDollar= 0f;
@@ -34,7 +37,7 @@ public class ViewExpensesActivity extends Activity {
         expenseList = findViewById(R.id.expenseList);
         btnAddExpense = findViewById(R.id.addExp);
         FloatingActionButton floatButton = findViewById(R.id.GoHome);
-
+        close = findViewById(R.id.wipeList);
         expenses = new ArrayList<>();
 
 
@@ -44,14 +47,14 @@ public class ViewExpensesActivity extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
-                expenses
+                ExpenseData.getExpenses()
         );
         expenseList.setAdapter(adapter);
 
         btnAddExpense.setOnClickListener(v -> {
             Intent intent = new Intent(ViewExpensesActivity.this, AddExpenseActivity.class);
             Bundle bund = new Bundle();
-            bund.putFloat("budget",budgetDollar);
+            //bund.putFloat("budget",budgetDollar);
             intent.putExtras(bund);
             startActivityForResult(intent, REQUEST_ADD_EXPENSE);
         });
@@ -62,15 +65,23 @@ public class ViewExpensesActivity extends Activity {
 
                 Intent hIntent = new Intent(ViewExpensesActivity.this, HomeActivity.class);
                 Bundle bund = new Bundle();
-                bund.putFloat("expenseTotal", expenseDollar);
-                bund.putFloat("budget", budgetDollar);
+                bund.putFloat("expenseTotal", ExpenseData.getExpenseDollar());
+                //bund.putFloat("budget", budgetDollar);
                 hIntent.putExtras(bund);
+                hIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(hIntent);
             }
         });
 
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExpenseData.clearExpenses();
+                ((ArrayAdapter) expenseList.getAdapter()).notifyDataSetChanged();
 
+            }
 
+        });
     }
 
 
@@ -80,6 +91,7 @@ public class ViewExpensesActivity extends Activity {
         if (requestCode == REQUEST_ADD_EXPENSE && resultCode == RESULT_OK && data != null) {
             getIntentData(data);
             ((ArrayAdapter) expenseList.getAdapter()).notifyDataSetChanged();
+
         }
     }
 
@@ -88,12 +100,12 @@ public class ViewExpensesActivity extends Activity {
 
     private void getIntentData(Intent i){
         Bundle bundle = i.getExtras();
-        if (bundle != null) {
+        if (bundle != null ) {
             String name = bundle.getString("expenseName");
             String price = bundle.getString("expensePrice");
             String amount = bundle.getString("expenseAmount");
             String category = bundle.getString("expenseCategory");
-            budgetDollar = bundle.getFloat("budget");
+            //budgetDollar = bundle.getFloat("budget");
 
             String emoji ;
             switch (category) {
@@ -120,15 +132,52 @@ public class ViewExpensesActivity extends Activity {
 
             }
 
+            int Cost = Integer.parseInt(amount) * Integer.parseInt(price);
 
 
             String expenseItem = emoji + " " + name + "\n"
                     + "Category: " + category + "\n"
                     + "Item Price: " + price + "\n"
-                    + "Total: " + Integer.parseInt(amount)*Integer.parseInt(price);
+                    + "Total: " + Cost;
 
-            expenses.add(expenseItem);
-            expenseDollar += Integer.parseInt(amount)*Integer.parseInt(price);
+            ExpenseData.addExpense(expenseItem,Cost);
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+    static class ExpenseData {
+        private static ArrayList<String> expenses = new ArrayList<>();
+        private static float expenseDollar = 0f;
+
+
+        public static ArrayList<String> getExpenses() {
+            return expenses;
+        }
+
+        public static void addExpense(String expense, float cost) {
+            expenses.add(expense);
+            expenseDollar += cost;
+        }
+
+        public static float getExpenseDollar() {
+            return expenseDollar;
+        }
+
+
+
+
+
+        public static void clearExpenses() {
+            expenses.clear();
+            expenseDollar = 0f;
         }
     }
 

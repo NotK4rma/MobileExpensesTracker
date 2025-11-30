@@ -14,9 +14,9 @@
 
 
     <item
-        android:id="@+id/nav_categories"
+        android:id="@+id/nav_view"
         android:icon="@drawable/ic_category"
-        android:title="Categories" />
+        android:title="View Expenses" />
 
 
     <item

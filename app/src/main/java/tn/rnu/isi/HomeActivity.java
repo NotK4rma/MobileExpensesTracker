@@ -2,6 +2,8 @@ package tn.rnu.isi;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -66,24 +68,34 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                Intent intent= new Intent(HomeActivity.this, ViewExpensesActivity.class);
+
                 if (id == R.id.nav_home) {
                     Toast.makeText(HomeActivity.this, "Home clicked", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_add_expense) {
-                    Toast.makeText(HomeActivity.this, "Expenses clicked", Toast.LENGTH_SHORT).show();
-                    float budget = Float.parseFloat(tv_income.getText().toString());
-                    Bundle bund = new Bundle();
-                    bund.putFloat("budget", budget);
-                    intent.putExtras(bund);
+                    Toast.makeText(HomeActivity.this, "Add Expenses", Toast.LENGTH_SHORT).show();
+                    Intent intent= new Intent(HomeActivity.this, AddExpenseActivity.class);
+//                    float budget = Float.parseFloat(tv_income.getText().toString());
+//                    Bundle bund = new Bundle();
+//                    bund.putFloat("budget", budget);
+//                    intent.putExtras(bund);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
-                } else if (id == R.id.nav_categories) {
-                    Toast.makeText(HomeActivity.this, "Categories clicked", Toast.LENGTH_SHORT).show();
+                } else if (id == R.id.nav_view) {
+                    Intent intent= new Intent(HomeActivity.this, ViewExpensesActivity.class);
+                    Toast.makeText(HomeActivity.this, "Expenses listed here", Toast.LENGTH_SHORT).show();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                 } else if (id == R.id.nav_reports) {
                     Toast.makeText(HomeActivity.this, "Reports clicked", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_settings) {
                     Toast.makeText(HomeActivity.this, "Settings clicked", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_logout) {
-                    Toast.makeText(HomeActivity.this, "Logout clicked", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+                    ViewExpensesActivity.ExpenseData.clearExpenses();
+                    Intent intent = new Intent (HomeActivity.this,MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish();
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
@@ -99,6 +111,7 @@ public class HomeActivity extends AppCompatActivity {
                 Bundle bund = new Bundle();
                 bund.putFloat("budget", budget);
                 Intent expIntent = new Intent(HomeActivity.this, AddExpenseActivity.class);
+                expIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 expIntent.putExtras(bund);
                 startActivity(expIntent);
             }
@@ -109,18 +122,28 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tv_income.setText(String.valueOf(Float.parseFloat(tv_income.getText().toString())+100));
+                if(Float.parseFloat(Balance.getText().toString())!=0){
+                    Balance.setText(String.valueOf(-Float.parseFloat(expense.getText().toString())+Float.parseFloat(tv_income.getText().toString())));
+                }
             }
         });
 
-        Intent intent = getIntent();
-            if(intent != null && intent.getExtras()!=null){
-                float expenseTotal =  intent.getExtras().getFloat("expenseTotal");
-                float budget = intent.getExtras().getFloat("budget");
-                Balance.setText(String.valueOf(-expenseTotal+budget));
-                expense.setText(String.valueOf(expenseTotal));
-                tv_income.setText(String.valueOf(budget));
-            }
+        tv_income.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Balance.setText(String.valueOf(-Float.parseFloat(expense.getText().toString())+Float.parseFloat(tv_income.getText().toString())));
+            }
+        });
+
+
+        Intent serviceInt = new Intent(HomeActivity.this, NotifService.class);
+        startService(serviceInt);
 
 
     }
@@ -134,6 +157,23 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        updateUI();
+    }
+
+    private void updateUI() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getExtras() != null) {
+            float expenseTotal = intent.getExtras().getFloat("expenseTotal");
+            Balance.setText(String.valueOf(-expenseTotal + Float.parseFloat(tv_income.getText().toString())));
+            expense.setText(String.valueOf(expenseTotal));
+            //tv_income.setText(String.valueOf(budget));
+        }
     }
 
 
