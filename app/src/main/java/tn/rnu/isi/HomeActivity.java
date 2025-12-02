@@ -69,8 +69,11 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
 
-                if (id == R.id.nav_home) {
-                    Toast.makeText(HomeActivity.this, "Home clicked", Toast.LENGTH_SHORT).show();
+                if (id == R.id.nav_ai) {
+                    Toast.makeText(HomeActivity.this, "Ai Assistant", Toast.LENGTH_SHORT).show();
+                    Intent intent= new Intent(HomeActivity.this, AskAi.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                 } else if (id == R.id.nav_add_expense) {
                     Toast.makeText(HomeActivity.this, "Add Expenses", Toast.LENGTH_SHORT).show();
                     Intent intent= new Intent(HomeActivity.this, AddExpenseActivity.class);
